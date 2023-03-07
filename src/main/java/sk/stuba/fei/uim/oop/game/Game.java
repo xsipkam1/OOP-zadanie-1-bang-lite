@@ -36,7 +36,7 @@ public class Game {
     private void startGame() {
         System.out.println("--- GAME STARTED ---");
         Player activePlayer = players.get(currentPlayer);
-        activePlayer.printCards();
+        playerTurn(activePlayer);
     }
 
     private void initializeCardStack() {
@@ -59,5 +59,54 @@ public class Game {
         }
     }
 
+    private void printCards(Player player) {
+        System.out.println("HRAC " + player.getName() + " MA TIETO KARTY: ");
+        for(int i=0; i<player.getPlayerCards().size(); i++){
+            System.out.println((i+1) + " " + player.getPlayerCards().get(i).getCardName());
+        }
+    }
 
+    private ArrayList<Player> getOpponents(Player player){
+        ArrayList<Player> opponents = new ArrayList<>();
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i) != player) {
+                Player originalElement = players.get(i);
+                Player copiedElement = new Player(players.get(i).getName());
+                opponents.add(copiedElement);
+            }
+        }
+        return opponents;
+    }
+    private void printPlayers(ArrayList<Player> opponents) {
+        System.out.println("V HRE SU TITO HRACI: ");
+        int index=1;
+        for(Player opponent : opponents) {
+            System.out.println((index) + " " + opponent.getName());
+            index++;
+        }
+    }
+
+    private void playerTurn(Player player) {
+        printCards(player);
+        int choiceCard;
+        do {
+            choiceCard=ZKlavesnice.readInt("Ktoru kartu chces zahrat? (cislo 1 az " + player.getPlayerCards().size() + ") ");
+        } while(choiceCard < 1 || choiceCard > player.getPlayerCards().size());
+
+        ArrayList<Player> opponents = getOpponents(player);
+        printPlayers(opponents);
+        int choicePlayer;
+        do {
+            choicePlayer=ZKlavesnice.readInt("Na ktoreho hraca chces kartu " + player.getPlayerCards().get(choiceCard-1).getCardName() + " zahrat? (cislo 1 az " + opponents.size() + ") ");
+        } while(choicePlayer < 1 || choicePlayer > players.size());
+
+        Card card = player.getPlayerCards().get(choiceCard-1);
+        Player opponent = opponents.get(choicePlayer-1);
+        card.action(opponent);
+
+        //discardedCards.add();
+        player.discardCard(card.getClass());
+        //printCards(player);
+
+    }
 }

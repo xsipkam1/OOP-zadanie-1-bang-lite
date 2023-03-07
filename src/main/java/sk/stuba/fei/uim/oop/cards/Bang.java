@@ -14,6 +14,7 @@ public class Bang extends Card{
     public void action(Player player) {
         if(player.hasCard(Mancato.class)) {
             System.out.println("HRAC " + player.getName() + " SA UHOL!");
+            player.discardCard(Mancato.class);
         } else {
             System.out.println("ZASAH!");
             player.decrementLife();

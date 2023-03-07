@@ -1,8 +1,8 @@
 package sk.stuba.fei.uim.oop.player;
 
 import sk.stuba.fei.uim.oop.cards.*;
+import sk.stuba.fei.uim.oop.utility.ZKlavesnice;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class Player {
@@ -31,18 +31,24 @@ public class Player {
     public boolean isActive() {
         return life > 0;
     }
-    public void printCards() {
-        System.out.println("HRAC " + this.getName() + " MA TIETO KARTY: ");
-        for(int i=0; i<playerCards.size(); i++){
-            System.out.println((i+1) + " " + playerCards.get(i).getCardName());
-        }
+    public ArrayList<? extends Card> getPlayerCards(){
+        return this.playerCards;
     }
-    public boolean hasCard(Class<?> t){
+
+    public boolean hasCard(Class<?> t) {
         for(Card i : this.playerCards) {
             if(i.getClass().equals(t)) {
                 return true;
             }
         }
         return false;
+    }
+    public void discardCard(Class<?> t) {
+        for(Card i : this.playerCards) {
+            if(i.getClass().equals(t)) {
+                this.playerCards.remove(i);
+                break;
+            }
+        }
     }
 }
