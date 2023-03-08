@@ -12,7 +12,7 @@ public class Mancato extends Card{
         return CARD_NAME;
     }
     @Override
-    public boolean action(Player player) {
+    public boolean action(Player player, ArrayList<Card> playingCards) {
         System.out.println("KARTU VEDLA NEMOZES ZAHRAT!");
         return false;
     }

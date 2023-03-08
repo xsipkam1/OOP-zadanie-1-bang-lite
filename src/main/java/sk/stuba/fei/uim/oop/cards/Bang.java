@@ -13,10 +13,11 @@ public class Bang extends Card{
     }
 
     @Override
-    public boolean action(Player player) {
+    public boolean action(Player player, ArrayList<Card> playingCards) {
         if(player.hasCard(Mancato.class)) {
             System.out.println("HRAC " + player.getName() + " SA UHOL!");
             player.discardCard(Mancato.class);
+            playingCards.add(new Mancato());
         } else {
             System.out.println("ZASAH!");
             player.decrementLife();
