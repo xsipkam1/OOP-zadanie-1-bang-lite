@@ -34,7 +34,7 @@ public class Game {
     }
 
     private void startGame() {
-        System.out.println("--- GAME STARTED ---");
+        System.out.println("---------------HRA ZACALA------------------");
         Player activePlayer = players.get(currentPlayer);
         playerTurn(activePlayer);
     }
@@ -70,14 +70,13 @@ public class Game {
         ArrayList<Player> opponents = new ArrayList<>();
         for (int i = 0; i < players.size(); i++) {
             if (players.get(i) != player) {
-                Player originalElement = players.get(i);
-                Player copiedElement = new Player(players.get(i).getName());
-                opponents.add(copiedElement);
+                opponents.add(players.get(i));
             }
         }
         return opponents;
     }
-    private void printPlayers(ArrayList<Player> opponents) {
+
+    private void printOpponents(ArrayList<Player> opponents) {
         System.out.println("V HRE SU TITO HRACI: ");
         int index=1;
         for(Player opponent : opponents) {
@@ -86,27 +85,94 @@ public class Game {
         }
     }
 
-    private void playerTurn(Player player) {
-        printCards(player);
+    private void checkLife(Player player) {
+        if(player.getLife()<=0) {
+            System.out.println("HRAC " + player.getName() + " JE MRTVY!");
+            players.remove(player);
+            removeCards(player);
+        }
+        else {
+            System.out.println("HRAC " + player.getName() + " MA ESTE " + player.getLife() + " ZIVOTY!");
+        }
+    }
+
+    private void removeCards(Player player) {
+        for(int i=0; i<player.getPlayerCards().size(); i++) {
+            discardedCards.add(player.getPlayerCards().remove(i));
+        }
+    }
+
+    private int chooseCard(Player player) {
         int choiceCard;
         do {
-            choiceCard=ZKlavesnice.readInt("Ktoru kartu chces zahrat? (cislo 1 az " + player.getPlayerCards().size() + ") ");
+            choiceCard=ZKlavesnice.readInt("Ktoru kartu chces pouzit? (cislo 1 az " + player.getPlayerCards().size() + ") ");
         } while(choiceCard < 1 || choiceCard > player.getPlayerCards().size());
+        return choiceCard;
+    }
 
+    private Player chooseOpponent(Player player, int choiceCard) {
         ArrayList<Player> opponents = getOpponents(player);
-        printPlayers(opponents);
-        int choicePlayer;
+        printOpponents(opponents);
+        int choiceOpponent;
         do {
-            choicePlayer=ZKlavesnice.readInt("Na ktoreho hraca chces kartu " + player.getPlayerCards().get(choiceCard-1).getCardName() + " zahrat? (cislo 1 az " + opponents.size() + ") ");
-        } while(choicePlayer < 1 || choicePlayer > players.size());
+            choiceOpponent=ZKlavesnice.readInt("Na ktoreho hraca chces kartu " + player.getPlayerCards().get(choiceCard-1).getCardName() + " zahrat? (cislo 1 az " + opponents.size() + ") ");
+        } while(choiceOpponent < 1 || choiceOpponent > players.size());
+        Player opponent = opponents.get(choiceOpponent-1);
+        return opponent;
+    }
 
-        Card card = player.getPlayerCards().get(choiceCard-1);
-        Player opponent = opponents.get(choicePlayer-1);
-        card.action(opponent);
+    private void drawCards(Player player) {
+        System.out.println("HRAC " + player.getName() + " SI TAHA 2 KARTY!");
+        for(int i=0; i<2; i++) {
+            player.addCard(playingCards.remove(0));
+        }
+    }
 
-        //discardedCards.add();
-        player.discardCard(card.getClass());
+    private void playerTurn(Player player) {
+        System.out.println("-------------------------------------------");
+        System.out.println("HRAC " + player.getName() + " ZACAL SVOJ TAH!");
+        drawCards(player);
+
+        while (true) {
+            printCards(player);
+            System.out.println();
+            System.out.println("1 zahrat kartu");
+            System.out.println("2 zahodit kartu");
+            System.out.println("3 ukoncit tah");
+
+            int choice;
+            do {
+                choice=ZKlavesnice.readInt("Vyber si svoj tah (cislo 1 az 3) ");
+            } while(choice != 1 && choice != 2 && choice != 3);
+
+            if (choice==1) {
+                int choiceCard = chooseCard(player);
+                Player choiceOpponent = chooseOpponent(player, choiceCard);
+                Card card = player.getPlayerCards().get(choiceCard-1);
+                int choiceOpponentLivesBeforePlayerTurn = choiceOpponent.getLife();
+
+                if (card.action(choiceOpponent)) {
+                    player.discardCard(card.getClass());
+                    if (choiceOpponent.getLife() < choiceOpponentLivesBeforePlayerTurn) {
+                        checkLife(choiceOpponent);
+                    }
+                }
+            }
+            else if (choice==2) {
+                int choiceCard = chooseCard(player);
+                player.getPlayerCards().remove(choiceCard-1);
+            }
+            else if (choice == 3) {
+                if(player.getPlayerCards().size()>player.getLife()){
+                    System.out.println("NEMOZES SKONCIT TAH LEBO MAS VIAC KARIET AKO ZIVOTOV! (mas "+player.getLife()+" zivoty)");
+                    continue;
+                }
+                System.out.println("HRAC " + player.getName() + " UKONCIL SVOJ TAH, ZOSTALI MU " + player.getLife() + " ZIVOTY!");
+                break;
+            }
+
+        }
+        //discardedCards.add(card);
         //printCards(player);
-
     }
 }

@@ -2,16 +2,18 @@ package sk.stuba.fei.uim.oop.cards;
 
 import sk.stuba.fei.uim.oop.player.Player;
 
+import java.util.ArrayList;
+
 public class Bang extends Card{
-    private final String cardName = "BANG";
+    private final String CARD_NAME = "BANG";
 
     @Override
     public String getCardName() {
-        return cardName;
+        return CARD_NAME;
     }
 
     @Override
-    public void action(Player player) {
+    public boolean action(Player player) {
         if(player.hasCard(Mancato.class)) {
             System.out.println("HRAC " + player.getName() + " SA UHOL!");
             player.discardCard(Mancato.class);
@@ -19,5 +21,6 @@ public class Bang extends Card{
             System.out.println("ZASAH!");
             player.decrementLife();
         }
+        return true;
     }
 }
