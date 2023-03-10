@@ -17,27 +17,31 @@ public class Player {
     }
 
     public int getLife() {
-        return life;
+        return this.life;
     }
+
     public String getName(){
-        return name;
+        return this.name;
     }
+
+    public ArrayList<Card> getPlayerCards(){
+        return this.playerCards;
+    }
+
+    public void setCards(ArrayList<Card> cards){
+        this.playerCards=cards;
+    }
+
     public void decrementLife() {
         this.life--;
     }
-    public void setCards(ArrayList<Card> cards){
-        playerCards=cards;
+
+    public void incrementLife() {
+        this.life++;
     }
 
     public void addCard(Card card) {
-        playerCards.add(card);
-    }
-
-    public boolean isActive() {
-        return life > 0;
-    }
-    public ArrayList<Card> getPlayerCards(){
-        return this.playerCards;
+        this.playerCards.add(card);
     }
 
     public boolean hasCard(Class<? extends Card> cardClass) {
@@ -72,8 +76,8 @@ public class Player {
     public void checkLife(ArrayList<Player> players, ArrayList<Card> playingCards) {
         if(this.getLife()<=0) {
             System.out.println("HRAC " + this.getName() + " JE MRTVY!");
-            players.remove(this);
             this.removeCards(playingCards);
+            players.remove(this);
         }
         else {
             System.out.println("HRAC " + this.getName() + " MA ESTE " + this.getLife() + " ZIVOT/Y!");
@@ -107,12 +111,12 @@ public class Player {
         }
     }
 
-    public Player chooseOpponent(int choiceCard, ArrayList<Player> players) {
+    public Player chooseOpponent(String choiceCard, ArrayList<Player> players) {
         ArrayList<Player> opponents = this.getOpponents(players);
         printOpponents(opponents);
         int choiceOpponent;
         do {
-            choiceOpponent=ZKlavesnice.readInt("Na ktoreho hraca chces kartu " + this.getPlayerCards().get(choiceCard-1).getCardName() + " zahrat? (cislo 1 az " + opponents.size() + ") ");
+            choiceOpponent=ZKlavesnice.readInt("Na ktoreho hraca chces kartu " + choiceCard + " zahrat? (cislo 1 az " + opponents.size() + ") ");
         } while(choiceOpponent < 1 || choiceOpponent > players.size());
         Player opponent = opponents.get(choiceOpponent-1);
         return opponent;

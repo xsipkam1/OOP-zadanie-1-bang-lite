@@ -43,11 +43,17 @@ public class Game {
     }
 
     private void initializeCardStack() {
-        for (int i = 0; i < 10; i++) {
-            playingCards.add(new Bang());
-        }
-        for (int i = 0; i < 5; i++) {
-            playingCards.add(new Mancato());
+        addCardsToDeck(playingCards, new Bang(), 20);
+        addCardsToDeck(playingCards, new Missed(), 15);
+        addCardsToDeck(playingCards, new Beer(), 8);
+        addCardsToDeck(playingCards, new CatBalou(), 6);
+        addCardsToDeck(playingCards, new Stagecoach(), 4);
+        addCardsToDeck(playingCards, new Indians(), 2);
+    }
+
+    private void addCardsToDeck(ArrayList<Card> playingCards, Card card, int amount) {
+        for (int i = 0; i < amount; i++) {
+            playingCards.add(card);
         }
     }
 
@@ -67,9 +73,13 @@ public class Game {
         currentPlayer %= players.size();
     }
 
+    private void throwCardToDeck(Player player, int choiceCard) {
+        playingCards.add(player.getPlayerCards().remove(choiceCard-1));
+    }
+
     private void playerTurn(Player player) {
         System.out.println("------------------------------------------");
-        System.out.println("HRAC " + player.getName() + " ZACAL SVOJ TAH!");
+        System.out.println("HRAC " + player.getName() + " ZACAL SVOJ TAH! MA ESTE " + player.getLife() + " ZIVOT/Y/OV");
         player.drawCards(playingCards);
 
         while (player.getPlayerCards().size()>0 && players.size()>1) {
@@ -78,27 +88,21 @@ public class Game {
 
             if (choice == 1) {
                 int choiceCard = player.chooseCard();
-                Player choiceOpponent = player.chooseOpponent(choiceCard, players);
                 Card card = player.getPlayerCards().get(choiceCard-1);
-                int choiceOpponentLivesBeforePlayerTurn = choiceOpponent.getLife();
-
-                if (card.action(choiceOpponent, playingCards)) {
-                    playingCards.add(player.getPlayerCards().remove(choiceCard-1));
-                    if (choiceOpponent.getLife() < choiceOpponentLivesBeforePlayerTurn) {
-                        choiceOpponent.checkLife(players, playingCards);
-                    }
+                if(card.action(player, playingCards, players)){
+                    throwCardToDeck(player, choiceCard);
                 }
             }
             else if (choice == 2) {
                 int choiceCard = player.chooseCard();
-                playingCards.add(player.getPlayerCards().remove(choiceCard-1));
+                throwCardToDeck(player, choiceCard);
             }
             else if (choice == 3) {
                 if(player.getPlayerCards().size()>player.getLife()){
-                    System.out.println("NEMOZES SKONCIT TAH LEBO MAS VIAC KARIET AKO ZIVOTOV! (mas " + player.getLife() + " zivot/y)");
+                    System.out.println("NEMOZES SKONCIT TAH LEBO MAS VIAC KARIET AKO ZIVOTOV! (mas " + player.getLife() + " zivot/y/ov)");
                     continue;
                 }
-                System.out.println("HRAC " + player.getName() + " UKONCIL SVOJ TAH, ZOSTALI MU " + player.getLife() + " ZIVOT/Y!");
+                System.out.println("HRAC " + player.getName() + " UKONCIL SVOJ TAH, ZOSTALI MU " + player.getLife() + " ZIVOT/Y/OV!");
                 break;
             }
 
