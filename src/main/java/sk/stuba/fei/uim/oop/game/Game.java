@@ -6,6 +6,7 @@ import sk.stuba.fei.uim.oop.utility.ZKlavesnice;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 public class Game {
     private ArrayList<Card> playingCards;
@@ -15,13 +16,12 @@ public class Game {
     public Game(){
         playingCards = new ArrayList<>();
         players = new ArrayList<>();
-
-        int numPlayers;
+        int numOfPlayers;
         do {
-            numPlayers=ZKlavesnice.readInt("Zadaj pocet hracov (min 2 max 4): ");
-        } while(numPlayers < 2 || numPlayers > 4);
+            numOfPlayers=ZKlavesnice.readInt("Zadaj pocet hracov (min 2 max 4): ");
+        } while(numOfPlayers < 2 || numOfPlayers > 4);
 
-        for(int i=0; i<numPlayers; i++) {
+        for(int i=0; i<numOfPlayers; i++) {
             String name = ZKlavesnice.readString("Zadaj meno hraca c." + (i+1) + ": ");
             players.add(new Player(name));
         }
@@ -43,13 +43,15 @@ public class Game {
     }
 
     private void initializeCardStack() {
-        addCardsToDeck(playingCards, new Bang(), 10);
-        addCardsToDeck(playingCards, new Missed(), 5);
-        addCardsToDeck(playingCards, new Barrel(), 3);
-        //addCardsToDeck(playingCards, new Beer(), 8);
-        addCardsToDeck(playingCards, new CatBalou(), 4);
-        //addCardsToDeck(playingCards, new Stagecoach(), 4);
-        //addCardsToDeck(playingCards, new Indians(), 2);
+        addCardsToDeck(playingCards, new Bang(), 20);
+        addCardsToDeck(playingCards, new Missed(), 10);
+        addCardsToDeck(playingCards, new Beer(), 8);
+        addCardsToDeck(playingCards, new CatBalou(), 6);
+        addCardsToDeck(playingCards, new Stagecoach(), 4);
+        addCardsToDeck(playingCards, new Indians(), 2);
+        addCardsToDeck(playingCards, new Barrel(), 2);
+        addCardsToDeck(playingCards, new Prison(), 3);
+        addCardsToDeck(playingCards, new Dynamite(), 1);
     }
 
     private void addCardsToDeck(ArrayList<Card> playingCards, Card card, int amount) {
@@ -71,12 +73,43 @@ public class Game {
 
     private void chooseCurrentPlayer() {
         currentPlayer++;
-        currentPlayer %= players.size();
+        if(currentPlayer > players.size()-1) {
+            currentPlayer=0;
+        }
     }
 
+    private void checkDynamite(Player player, ArrayList<Card> playingCards) {
+        player.discardCard(Dynamite.class, player.getBlueCards());
+        if(new Random().nextInt(8) == 0) {
+            System.out.println("HRACOVI " + player.getName() + " VYBUCHOL DYNAMIT!");
+            for(int i=0; i<3; i++){
+                player.decrementLife();
+            }
+            if(player.getLife()>0) {
+                playingCards.add(new Dynamite());
+            }
+            player.checkLife(players, playingCards);
+        } else {
+            int dynamiteIndex = players.indexOf(player);
+            Player previousPlayer = players.get((dynamiteIndex - 1 + players.size()) % players.size());
+            previousPlayer.getBlueCards().add(new Dynamite());
+            System.out.println("HRACOVI " + player.getName() + " DYNAMIT NEVYBUCHOL A POSIELA HO HRACOVI " + previousPlayer.getName());
+        }
+    }
 
     private void playerTurn(Player player) {
         System.out.println("------------------------------------------");
+
+        if(player.hasCard(Dynamite.class, player.getBlueCards())) {
+            checkDynamite(player, playingCards);
+            if(player.getLife()<=0) return;
+        }
+        if(player.hasCard(Prison.class, player.getBlueCards())){
+            if(!player.escapedPrison(playingCards)) {
+                return;
+            }
+        }
+
         System.out.println("HRAC " + player.getName() + " ZACAL SVOJ TAH! MA ESTE " + player.getLife() + " ZIVOT/Y/OV");
         player.drawCards(playingCards);
 

@@ -4,6 +4,7 @@ import sk.stuba.fei.uim.oop.cards.*;
 import sk.stuba.fei.uim.oop.utility.ZKlavesnice;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Player {
     private int life;
@@ -72,9 +73,9 @@ public class Player {
         }
     }
 
-    public void removeCards(ArrayList<Card> playingCards) {
-        for(int i=0; i<this.getPlayerCards().size(); i++) {
-            playingCards.add(this.getPlayerCards().remove(i));
+    public void removeCards(ArrayList<Card> playingCards, ArrayList<Card> playerCards) {
+        for(int i=0; i<playerCards.size(); i++) {
+            playingCards.add(playerCards.remove(i));
         }
     }
 
@@ -88,7 +89,8 @@ public class Player {
     public void checkLife(ArrayList<Player> players, ArrayList<Card> playingCards) {
         if(this.getLife()<=0) {
             System.out.println("HRAC " + this.getName() + " JE MRTVY!");
-            this.removeCards(playingCards);
+            this.removeCards(playingCards, this.getPlayerCards());
+            this.removeCards(playingCards, this.getBlueCards());
             players.remove(this);
         }
         else {
@@ -159,4 +161,15 @@ public class Player {
         playingCards.add(playerCards.remove(choiceCard-1));
     }
 
+    public boolean escapedPrison(ArrayList<Card> playingCards) {
+        this.discardCard(Prison.class, this.getBlueCards());
+        playingCards.add(new Prison());
+        if(new Random().nextInt(4) == 0) {
+            System.out.println("HRACOVI " + this.getName() + " SA PODARILO UJST Z VAZENIA A ZACINA SVOJ TAH!");
+        } else {
+            System.out.println("HRACOVI " + this.getName() + " SA NEPODARILO UJST Z VAZENIA!");
+            return false;
+        }
+        return true;
+    }
 }
