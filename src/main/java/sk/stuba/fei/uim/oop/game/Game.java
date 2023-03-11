@@ -23,7 +23,6 @@ public class Game {
 
         for(int i=0; i<numPlayers; i++) {
             String name = ZKlavesnice.readString("Zadaj meno hraca c." + (i+1) + ": ");
-            Player player = new Player(name);
             players.add(new Player(name));
         }
 
@@ -39,16 +38,18 @@ public class Game {
             playerTurn(activePlayer);
             chooseCurrentPlayer();
         }
+        System.out.println("----------------KONIEC HRY----------------");
         System.out.println("VITAZ JE " + players.get(0).getName());
     }
 
     private void initializeCardStack() {
-        addCardsToDeck(playingCards, new Bang(), 20);
-        addCardsToDeck(playingCards, new Missed(), 15);
-        addCardsToDeck(playingCards, new Beer(), 8);
-        addCardsToDeck(playingCards, new CatBalou(), 6);
-        addCardsToDeck(playingCards, new Stagecoach(), 4);
-        addCardsToDeck(playingCards, new Indians(), 2);
+        addCardsToDeck(playingCards, new Bang(), 10);
+        addCardsToDeck(playingCards, new Missed(), 5);
+        addCardsToDeck(playingCards, new Barrel(), 3);
+        //addCardsToDeck(playingCards, new Beer(), 8);
+        addCardsToDeck(playingCards, new CatBalou(), 4);
+        //addCardsToDeck(playingCards, new Stagecoach(), 4);
+        //addCardsToDeck(playingCards, new Indians(), 2);
     }
 
     private void addCardsToDeck(ArrayList<Card> playingCards, Card card, int amount) {
@@ -73,9 +74,6 @@ public class Game {
         currentPlayer %= players.size();
     }
 
-    private void throwCardToDeck(Player player, int choiceCard) {
-        playingCards.add(player.getPlayerCards().remove(choiceCard-1));
-    }
 
     private void playerTurn(Player player) {
         System.out.println("------------------------------------------");
@@ -90,12 +88,12 @@ public class Game {
                 int choiceCard = player.chooseCard();
                 Card card = player.getPlayerCards().get(choiceCard-1);
                 if(card.action(player, playingCards, players)){
-                    throwCardToDeck(player, choiceCard);
+                    player.throwCardToDeck(choiceCard, playingCards, player.getPlayerCards());
                 }
             }
             else if (choice == 2) {
                 int choiceCard = player.chooseCard();
-                throwCardToDeck(player, choiceCard);
+                player.throwCardToDeck(choiceCard, playingCards, player.getPlayerCards());
             }
             else if (choice == 3) {
                 if(player.getPlayerCards().size()>player.getLife()){

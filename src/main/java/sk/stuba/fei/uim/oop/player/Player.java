@@ -9,11 +9,13 @@ public class Player {
     private int life;
     private String name;
     private ArrayList<Card> playerCards;
+    private ArrayList<Card> blueCards;
 
     public Player(String name) {
         this.life=4;
         this.name=name;
         this.playerCards=new ArrayList<>();
+        this.blueCards=new ArrayList<>();
     }
 
     public int getLife() {
@@ -26,6 +28,10 @@ public class Player {
 
     public ArrayList<Card> getPlayerCards(){
         return this.playerCards;
+    }
+
+    public ArrayList<Card> getBlueCards(){
+        return this.blueCards;
     }
 
     public void setCards(ArrayList<Card> cards){
@@ -44,8 +50,8 @@ public class Player {
         this.playerCards.add(card);
     }
 
-    public boolean hasCard(Class<? extends Card> cardClass) {
-        for (Card i : playerCards) {
+    public boolean hasCard(Class<? extends Card> cardClass, ArrayList<Card> cards) {
+        for (Card i : cards) {
             if (cardClass.isAssignableFrom(i.getClass())) {
                 return true;
             }
@@ -54,9 +60,15 @@ public class Player {
     }
 
     public void printCards() {
-        System.out.println("HRAC " + this.getName() + " MA TIETO KARTY: ");
+        System.out.println("\nHRAC " + this.getName() + " MA V RUKE TIETO KARTY: ");
         for(int i=0; i<this.getPlayerCards().size(); i++){
             System.out.println((i+1) + " " + this.getPlayerCards().get(i).getCardName());
+        }
+        if(this.getBlueCards().size()>0) {
+            System.out.println("PRED SEBOU MA TIETO MODRE KARTY: ");
+            for(int i=0; i<this.getBlueCards().size(); i++){
+                System.out.println((i+1) + " " + this.getBlueCards().get(i).getCardName());
+            }
         }
     }
 
@@ -94,9 +106,9 @@ public class Player {
 
     public ArrayList<Player> getOpponents(ArrayList<Player> players){
         ArrayList<Player> opponents = new ArrayList<>();
-        for (int i = 0; i < players.size(); i++) {
-            if (players.get(i) != this) {
-                opponents.add(players.get(i));
+        for (Player player : players) {
+            if (player != this) {
+                opponents.add(player);
             }
         }
         return opponents;
@@ -118,8 +130,7 @@ public class Player {
         do {
             choiceOpponent=ZKlavesnice.readInt("Na ktoreho hraca chces kartu " + choiceCard + " zahrat? (cislo 1 az " + opponents.size() + ") ");
         } while(choiceOpponent < 1 || choiceOpponent > players.size());
-        Player opponent = opponents.get(choiceOpponent-1);
-        return opponent;
+        return opponents.get(choiceOpponent-1);
     }
 
     public int chooseAction(){
@@ -135,13 +146,17 @@ public class Player {
         return choice;
     }
 
-    public void discardCard(Class<?> t) {
-        for(Card i : this.playerCards) {
+    public void discardCard(Class<?> t, ArrayList<Card> cards) {
+        for(Card i : cards) {
             if(i.getClass().equals(t)) {
-                this.playerCards.remove(i);
+                cards.remove(i);
                 break;
             }
         }
+    }
+
+    public void throwCardToDeck(int choiceCard, ArrayList<Card> playingCards, ArrayList<Card> playerCards) {
+        playingCards.add(playerCards.remove(choiceCard-1));
     }
 
 }

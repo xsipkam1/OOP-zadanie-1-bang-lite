@@ -16,8 +16,8 @@ public class Indians extends Card {
     public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players) {
         ArrayList<Player> opponents = player.getOpponents(players);
         for(Player opponent : opponents) {
-            if(opponent.hasCard(Bang.class)) {
-                opponent.discardCard(Bang.class);
+            if(opponent.hasCard(Bang.class, opponent.getPlayerCards())) {
+                opponent.discardCard(Bang.class, opponent.getPlayerCards());
                 System.out.println("HRAC " + opponent.getName() + " POUZIL KARTU BANG!");
                 playingCards.add(new Bang());
             }
