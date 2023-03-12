@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Stagecoach extends Card {
     private static final String CARD_NAME = "DOSTAVNIK";
 
-    public String getCardName(){
+    public String getCardName() {
         return CARD_NAME;
     }
     public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players) {

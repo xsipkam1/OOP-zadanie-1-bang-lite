@@ -8,15 +8,17 @@ import java.util.Random;
 
 public class Player {
     private int life;
-    private String name;
+    private final String name;
     private ArrayList<Card> playerCards;
-    private ArrayList<Card> blueCards;
+    private final ArrayList<Card> blueCards;
+    private final Random escapePrisonProbability;
 
     public Player(String name) {
         this.life=4;
         this.name=name;
         this.playerCards=new ArrayList<>();
         this.blueCards=new ArrayList<>();
+        this.escapePrisonProbability=new Random();
     }
 
     public int getLife() {
@@ -75,7 +77,7 @@ public class Player {
 
     public void removeCards(ArrayList<Card> playingCards, ArrayList<Card> playerCards) {
         for(int i=0; i<playerCards.size(); i++) {
-            playingCards.add(playerCards.remove(i));
+            throwCardToDeck(i, playingCards, playerCards);
         }
     }
 
@@ -103,7 +105,7 @@ public class Player {
         do {
             choiceCard= ZKlavesnice.readInt("Ktoru kartu chces pouzit? (cislo 1 az " + this.getPlayerCards().size() + ") ");
         } while(choiceCard < 1 || choiceCard > this.getPlayerCards().size());
-        return choiceCard;
+        return choiceCard-1;
     }
 
     public ArrayList<Player> getOpponents(ArrayList<Player> players){
@@ -131,7 +133,7 @@ public class Player {
         int choiceOpponent;
         do {
             choiceOpponent=ZKlavesnice.readInt("Na ktoreho hraca chces kartu " + choiceCard + " zahrat? (cislo 1 az " + opponents.size() + ") ");
-        } while(choiceOpponent < 1 || choiceOpponent > players.size());
+        } while(choiceOpponent < 1 || choiceOpponent > opponents.size());
         return opponents.get(choiceOpponent-1);
     }
 
@@ -157,14 +159,31 @@ public class Player {
         }
     }
 
+    public void playCard(ArrayList<Player> players, ArrayList<Card> playingCards) {
+        int choiceCard = this.chooseCard();
+        Card card = this.getPlayerCards().get(choiceCard);
+        if(card.action(this, playingCards, players)){
+            this.throwCardToDeck(choiceCard, playingCards, this.getPlayerCards());
+        }
+    }
+
+    public boolean endTurn(){
+        if(this.getPlayerCards().size()>this.getLife()){
+            System.out.println("NEMOZES SKONCIT TAH LEBO MAS VIAC KARIET AKO ZIVOTOV! (mas " + this.getLife() + " zivot/y/ov)");
+            return false;
+        }
+        System.out.println("HRAC " + this.getName() + " UKONCIL SVOJ TAH, ZOSTALI MU " + this.getLife() + " ZIVOT/Y/OV!");
+        return true;
+    }
+
     public void throwCardToDeck(int choiceCard, ArrayList<Card> playingCards, ArrayList<Card> playerCards) {
-        playingCards.add(playerCards.remove(choiceCard-1));
+        playingCards.add(playerCards.remove(choiceCard));
     }
 
     public boolean escapedPrison(ArrayList<Card> playingCards) {
         this.discardCard(Prison.class, this.getBlueCards());
         playingCards.add(new Prison());
-        if(new Random().nextInt(4) == 0) {
+        if(escapePrisonProbability.nextInt(4) == 0) {
             System.out.println("HRACOVI " + this.getName() + " SA PODARILO UJST Z VAZENIA A ZACINA SVOJ TAH!");
         } else {
             System.out.println("HRACOVI " + this.getName() + " SA NEPODARILO UJST Z VAZENIA!");

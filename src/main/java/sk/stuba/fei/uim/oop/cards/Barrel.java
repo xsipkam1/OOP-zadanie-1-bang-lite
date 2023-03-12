@@ -14,7 +14,7 @@ public class Barrel extends Card {
 
     @Override
     public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players) {
-        if(player.hasCard(Barrel.class, player.getBlueCards())){
+        if(player.hasCard(Barrel.class, player.getBlueCards())) {
             System.out.println("UZ PRED SEBOU JEDEN BARREL MAS!");
         } else {
             player.getBlueCards().add(new Barrel());

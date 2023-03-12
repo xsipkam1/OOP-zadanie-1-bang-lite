@@ -5,8 +5,13 @@ import sk.stuba.fei.uim.oop.player.Player;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Bang extends Card{
+public class Bang extends Card {
     private static final String CARD_NAME = "BANG";
+    private final Random barrelProbability;
+
+    public Bang() {
+        barrelProbability=new Random();
+    }
 
     @Override
     public String getCardName() {
@@ -18,7 +23,7 @@ public class Bang extends Card{
         Player chosenOpponent = player.chooseOpponent(CARD_NAME, players);
 
         if(chosenOpponent.hasCard(Barrel.class, chosenOpponent.getBlueCards())) {
-            if(new Random().nextInt(4) == 0) {
+            if(barrelProbability.nextInt(4) == 0) {
                 System.out.println("HRAC " + chosenOpponent.getName() + " SA UHOL POMOCOU KARTY BARREL!");
                 return true;
             } else {

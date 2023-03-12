@@ -8,17 +8,21 @@ import java.util.Random;
 
 public class CatBalou extends Card {
     private static final String CARD_NAME = "CAT BALOU";
+    private final Random chooseRandomCard;
+
+    public CatBalou() {
+        chooseRandomCard=new Random();
+    }
 
     public String getCardName(){
         return CARD_NAME;
     }
 
     private void pickRandomCardAndThrowItToDeck(Player chosenOpponent, ArrayList<Card> playingCards, ArrayList<Card> playerCards) {
-        Random random = new Random();
         int chosenOpponentNumOfCards = playerCards.size();
-        int randomCard = random.nextInt(chosenOpponentNumOfCards);
+        int randomCard = chooseRandomCard.nextInt(chosenOpponentNumOfCards);
         System.out.println("HRAC " + chosenOpponent.getName() + " PRISIEL O KARTU " + playerCards.get(randomCard).getCardName());
-        chosenOpponent.throwCardToDeck(randomCard+1, playingCards, playerCards);
+        chosenOpponent.throwCardToDeck(randomCard, playingCards, playerCards);
     }
 
     public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players){

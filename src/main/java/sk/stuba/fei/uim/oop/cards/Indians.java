@@ -20,8 +20,7 @@ public class Indians extends Card {
                 opponent.discardCard(Bang.class, opponent.getPlayerCards());
                 System.out.println("HRAC " + opponent.getName() + " POUZIL KARTU BANG!");
                 playingCards.add(new Bang());
-            }
-            else {
+            } else {
                 opponent.decrementLife();
                 System.out.println("HRAC " + opponent.getName() + " STRATIL ZIVOT!");
                 opponent.checkLife(players, playingCards);

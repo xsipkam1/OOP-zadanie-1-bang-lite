@@ -9,13 +9,23 @@ import java.util.Collections;
 import java.util.Random;
 
 public class Game {
-    private ArrayList<Card> playingCards;
-    private ArrayList<Player> players;
+    private final ArrayList<Card> playingCards;
+    private final ArrayList<Player> players;
     private int currentPlayer;
+    private final Random dynamiteProbability;
 
     public Game(){
         playingCards = new ArrayList<>();
         players = new ArrayList<>();
+        dynamiteProbability = new Random();
+
+        initializePlayers();
+        initializeCardStack();
+        dealCards();
+        startGame();
+    }
+
+    private void initializePlayers() {
         int numOfPlayers;
         do {
             numOfPlayers=ZKlavesnice.readInt("Zadaj pocet hracov (min 2 max 4): ");
@@ -25,36 +35,21 @@ public class Game {
             String name = ZKlavesnice.readString("Zadaj meno hraca c." + (i+1) + ": ");
             players.add(new Player(name));
         }
-
-        initializeCardStack();
-        dealCards();
-        startGame();
-    }
-
-    private void startGame() {
-        System.out.println("----------------HRA ZACALA----------------");
-        while(players.size() != 1){
-            Player activePlayer = players.get(currentPlayer);
-            playerTurn(activePlayer);
-            chooseCurrentPlayer();
-        }
-        System.out.println("----------------KONIEC HRY----------------");
-        System.out.println("VITAZ JE " + players.get(0).getName());
     }
 
     private void initializeCardStack() {
-        addCardsToDeck(playingCards, new Bang(), 20);
-        addCardsToDeck(playingCards, new Missed(), 10);
-        addCardsToDeck(playingCards, new Beer(), 8);
-        addCardsToDeck(playingCards, new CatBalou(), 6);
-        addCardsToDeck(playingCards, new Stagecoach(), 4);
-        addCardsToDeck(playingCards, new Indians(), 2);
-        addCardsToDeck(playingCards, new Barrel(), 2);
-        addCardsToDeck(playingCards, new Prison(), 3);
-        addCardsToDeck(playingCards, new Dynamite(), 1);
+        addCardsToDeck(new Bang(), 30);
+        addCardsToDeck(new Missed(), 15);
+        addCardsToDeck(new Beer(), 8);
+        addCardsToDeck(new CatBalou(), 6);
+        addCardsToDeck(new Stagecoach(), 4);
+        addCardsToDeck(new Indians(), 2);
+        addCardsToDeck(new Barrel(), 2);
+        addCardsToDeck(new Prison(), 3);
+        addCardsToDeck(new Dynamite(), 1);
     }
 
-    private void addCardsToDeck(ArrayList<Card> playingCards, Card card, int amount) {
+    private void addCardsToDeck(Card card, int amount) {
         for (int i = 0; i < amount; i++) {
             playingCards.add(card);
         }
@@ -71,6 +66,17 @@ public class Game {
         }
     }
 
+    private void startGame() {
+        System.out.println("----------------HRA ZACALA----------------");
+        while(players.size() != 1){
+            Player activePlayer = players.get(currentPlayer);
+            playerTurn(activePlayer);
+            chooseCurrentPlayer();
+        }
+        System.out.println("----------------KONIEC HRY----------------");
+        System.out.println("VITAZ JE " + players.get(0).getName());
+    }
+
     private void chooseCurrentPlayer() {
         currentPlayer++;
         if(currentPlayer > players.size()-1) {
@@ -78,9 +84,9 @@ public class Game {
         }
     }
 
-    private void checkDynamite(Player player, ArrayList<Card> playingCards) {
+    private void checkDynamite(Player player) {
         player.discardCard(Dynamite.class, player.getBlueCards());
-        if(new Random().nextInt(8) == 0) {
+        if(dynamiteProbability.nextInt(8) == 0) {
             System.out.println("HRACOVI " + player.getName() + " VYBUCHOL DYNAMIT!");
             for(int i=0; i<3; i++){
                 player.decrementLife();
@@ -101,8 +107,10 @@ public class Game {
         System.out.println("------------------------------------------");
 
         if(player.hasCard(Dynamite.class, player.getBlueCards())) {
-            checkDynamite(player, playingCards);
-            if(player.getLife()<=0) return;
+            checkDynamite(player);
+            if(player.getLife()<=0) {
+                return;
+            }
         }
         if(player.hasCard(Prison.class, player.getBlueCards())){
             if(!player.escapedPrison(playingCards)) {
@@ -118,25 +126,17 @@ public class Game {
             int choice=player.chooseAction();
 
             if (choice == 1) {
-                int choiceCard = player.chooseCard();
-                Card card = player.getPlayerCards().get(choiceCard-1);
-                if(card.action(player, playingCards, players)){
-                    player.throwCardToDeck(choiceCard, playingCards, player.getPlayerCards());
-                }
+                player.playCard(players, playingCards);
             }
             else if (choice == 2) {
-                int choiceCard = player.chooseCard();
-                player.throwCardToDeck(choiceCard, playingCards, player.getPlayerCards());
+                player.throwCardToDeck(player.chooseCard(), playingCards, player.getPlayerCards());
             }
             else if (choice == 3) {
-                if(player.getPlayerCards().size()>player.getLife()){
-                    System.out.println("NEMOZES SKONCIT TAH LEBO MAS VIAC KARIET AKO ZIVOTOV! (mas " + player.getLife() + " zivot/y/ov)");
-                    continue;
+                if(player.endTurn()){
+                    break;
                 }
-                System.out.println("HRAC " + player.getName() + " UKONCIL SVOJ TAH, ZOSTALI MU " + player.getLife() + " ZIVOT/Y/OV!");
-                break;
             }
-
         }
     }
+
 }
