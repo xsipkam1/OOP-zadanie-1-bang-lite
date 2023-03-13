@@ -8,9 +8,12 @@ import java.util.ArrayList;
 public class Stagecoach extends Card {
     private static final String CARD_NAME = "DOSTAVNIK";
 
+    @Override
     public String getCardName() {
         return CARD_NAME;
     }
+
+    @Override
     public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players) {
         System.out.println("HRAC " + player.getName() + " POUZIL KARTU DOSTAVNIK!");
         player.drawCards(playingCards);

@@ -16,10 +16,10 @@ public class Indians extends Card {
     public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players) {
         ArrayList<Player> opponents = player.getOpponents(players);
         for(Player opponent : opponents) {
-            if(opponent.hasCard(Bang.class, opponent.getPlayerCards())) {
-                opponent.discardCard(Bang.class, opponent.getPlayerCards());
+            int opponentBang = opponent.hasCard(Bang.class, opponent.getPlayerCards());
+            if(opponentBang > -1) {
+                opponent.throwCard(opponentBang, playingCards, opponent.getPlayerCards());
                 System.out.println("HRAC " + opponent.getName() + " POUZIL KARTU BANG!");
-                playingCards.add(new Bang());
             } else {
                 opponent.decrementLife();
                 System.out.println("HRAC " + opponent.getName() + " STRATIL ZIVOT!");

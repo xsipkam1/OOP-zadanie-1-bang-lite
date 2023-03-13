@@ -6,18 +6,15 @@ import sk.stuba.fei.uim.oop.utility.ZKlavesnice;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 
 public class Game {
     private final ArrayList<Card> playingCards;
     private final ArrayList<Player> players;
     private int currentPlayer;
-    private final Random dynamiteProbability;
 
     public Game(){
         playingCards = new ArrayList<>();
         players = new ArrayList<>();
-        dynamiteProbability = new Random();
 
         initializePlayers();
         initializeCardStack();
@@ -70,7 +67,11 @@ public class Game {
         System.out.println("----------------HRA ZACALA----------------");
         while(players.size() != 1){
             Player activePlayer = players.get(currentPlayer);
+            int numOfPlayersBeforePlayerTurn = players.size();
             playerTurn(activePlayer);
+            if(numOfPlayersBeforePlayerTurn > players.size()) {
+                currentPlayer = players.indexOf(activePlayer);
+            }
             chooseCurrentPlayer();
         }
         System.out.println("----------------KONIEC HRY----------------");
@@ -84,36 +85,19 @@ public class Game {
         }
     }
 
-    private void checkDynamite(Player player) {
-        player.discardCard(Dynamite.class, player.getBlueCards());
-        if(dynamiteProbability.nextInt(8) == 0) {
-            System.out.println("HRACOVI " + player.getName() + " VYBUCHOL DYNAMIT!");
-            for(int i=0; i<3; i++){
-                player.decrementLife();
-            }
-            if(player.getLife()>0) {
-                playingCards.add(new Dynamite());
-            }
-            player.checkLife(players, playingCards);
-        } else {
-            int dynamiteIndex = players.indexOf(player);
-            Player previousPlayer = players.get((dynamiteIndex - 1 + players.size()) % players.size());
-            previousPlayer.getBlueCards().add(new Dynamite());
-            System.out.println("HRACOVI " + player.getName() + " DYNAMIT NEVYBUCHOL A POSIELA HO HRACOVI " + previousPlayer.getName());
-        }
-    }
-
     private void playerTurn(Player player) {
         System.out.println("------------------------------------------");
 
-        if(player.hasCard(Dynamite.class, player.getBlueCards())) {
-            checkDynamite(player);
+        Card dynamite = player.getCard(Dynamite.class, player.getBlueCards());
+        if(dynamite != null) {
+            ((Dynamite) dynamite).checkDynamite(player, playingCards, players);
             if(player.getLife()<=0) {
                 return;
             }
         }
-        if(player.hasCard(Prison.class, player.getBlueCards())){
-            if(!player.escapedPrison(playingCards)) {
+        Card prison = player.getCard(Prison.class, player.getBlueCards());
+        if(prison != null) {
+            if(!((Prison) prison).escapedPrison(player, playingCards)) {
                 return;
             }
         }
@@ -127,16 +111,19 @@ public class Game {
 
             if (choice == 1) {
                 player.playCard(players, playingCards);
-            }
-            else if (choice == 2) {
-                player.throwCardToDeck(player.chooseCard(), playingCards, player.getPlayerCards());
-            }
-            else if (choice == 3) {
+            } else if (choice == 2) {
+                player.throwCard(player.chooseCard(), playingCards, player.getPlayerCards());
+            } else if (choice == 3) {
                 if(player.endTurn()){
                     break;
                 }
             }
         }
+
+        if(players.size() > 1 ) {
+            System.out.println("HRAC " + player.getName() + " UKONCIL SVOJ TAH, ZOSTALI MU " + player.getLife() + " ZIVOT/Y/OV!");
+        }
+
     }
 
 }

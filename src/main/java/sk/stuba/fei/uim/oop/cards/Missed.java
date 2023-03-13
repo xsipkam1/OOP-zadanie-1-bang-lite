@@ -11,6 +11,7 @@ public class Missed extends Card{
     public String getCardName() {
         return CARD_NAME;
     }
+
     @Override
     public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players) {
         System.out.println("KARTU VEDLA NEMOZES ZAHRAT!");

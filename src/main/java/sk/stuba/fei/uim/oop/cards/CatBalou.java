@@ -14,17 +14,12 @@ public class CatBalou extends Card {
         chooseRandomCard=new Random();
     }
 
+    @Override
     public String getCardName(){
         return CARD_NAME;
     }
 
-    private void pickRandomCardAndThrowItToDeck(Player chosenOpponent, ArrayList<Card> playingCards, ArrayList<Card> playerCards) {
-        int chosenOpponentNumOfCards = playerCards.size();
-        int randomCard = chooseRandomCard.nextInt(chosenOpponentNumOfCards);
-        System.out.println("HRAC " + chosenOpponent.getName() + " PRISIEL O KARTU " + playerCards.get(randomCard).getCardName());
-        chosenOpponent.throwCardToDeck(randomCard, playingCards, playerCards);
-    }
-
+    @Override
     public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players){
         Player chosenOpponent = player.chooseOpponent(CARD_NAME, players);
 
@@ -46,6 +41,12 @@ public class CatBalou extends Card {
         ArrayList<Card> targetCards = chosenOpponent.getBlueCards().isEmpty() ? chosenOpponent.getPlayerCards() : chosenOpponent.getBlueCards();
         pickRandomCardAndThrowItToDeck(chosenOpponent, playingCards, targetCards);
         return true;
+    }
 
+    private void pickRandomCardAndThrowItToDeck(Player chosenOpponent, ArrayList<Card> playingCards, ArrayList<Card> playerCards) {
+        int chosenOpponentNumOfCards = playerCards.size();
+        int randomCard = chooseRandomCard.nextInt(chosenOpponentNumOfCards);
+        System.out.println("HRAC " + chosenOpponent.getName() + " PRISIEL O KARTU " + playerCards.get(randomCard).getCardName());
+        chosenOpponent.throwCard(randomCard, playingCards, playerCards);
     }
 }

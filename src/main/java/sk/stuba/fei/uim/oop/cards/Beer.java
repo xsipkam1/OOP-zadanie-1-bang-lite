@@ -7,9 +7,12 @@ import java.util.ArrayList;
 public class Beer extends Card {
     private static final String CARD_NAME = "PIVO";
 
+    @Override
     public String getCardName(){
         return CARD_NAME;
     }
+
+    @Override
     public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players) {
         player.incrementLife();
         System.out.println("HRAC " + player.getName() + " SI DOPLNIL ZIVOT, TERAZ MA " + player.getLife() + " ZIVOTY/OV!");

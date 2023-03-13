@@ -4,21 +4,18 @@ import sk.stuba.fei.uim.oop.cards.*;
 import sk.stuba.fei.uim.oop.utility.ZKlavesnice;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Player {
     private int life;
     private final String name;
     private ArrayList<Card> playerCards;
     private final ArrayList<Card> blueCards;
-    private final Random escapePrisonProbability;
 
     public Player(String name) {
         this.life=4;
         this.name=name;
         this.playerCards=new ArrayList<>();
         this.blueCards=new ArrayList<>();
-        this.escapePrisonProbability=new Random();
     }
 
     public int getLife() {
@@ -53,13 +50,23 @@ public class Player {
         this.playerCards.add(card);
     }
 
-    public boolean hasCard(Class<? extends Card> cardClass, ArrayList<Card> cards) {
-        for (Card i : cards) {
-            if (cardClass.isAssignableFrom(i.getClass())) {
-                return true;
+    public int hasCard(Class<? extends Card> cardClass, ArrayList<Card> cards) {
+        for (int i = 0; i < cards.size(); i++) {
+            Card card = cards.get(i);
+            if (cardClass.isAssignableFrom(card.getClass())) {
+                return i;
             }
         }
-        return false;
+        return -1;
+    }
+
+    public Card getCard(Class<? extends Card> cardClass, ArrayList<Card> cards) {
+        for (Card card : cards) {
+            if (cardClass.isAssignableFrom(card.getClass())) {
+                return card;
+            }
+        }
+        return null;
     }
 
     public void printCards() {
@@ -77,7 +84,7 @@ public class Player {
 
     public void removeCards(ArrayList<Card> playingCards, ArrayList<Card> playerCards) {
         for(int i=0; i<playerCards.size(); i++) {
-            throwCardToDeck(i, playingCards, playerCards);
+            throwCard(i, playingCards, playerCards);
         }
     }
 
@@ -150,20 +157,11 @@ public class Player {
         return choice;
     }
 
-    public void discardCard(Class<?> t, ArrayList<Card> cards) {
-        for(Card i : cards) {
-            if(i.getClass().equals(t)) {
-                cards.remove(i);
-                break;
-            }
-        }
-    }
-
     public void playCard(ArrayList<Player> players, ArrayList<Card> playingCards) {
         int choiceCard = this.chooseCard();
         Card card = this.getPlayerCards().get(choiceCard);
         if(card.action(this, playingCards, players)){
-            this.throwCardToDeck(choiceCard, playingCards, this.getPlayerCards());
+            this.throwCard(choiceCard, playingCards, this.getPlayerCards());
         }
     }
 
@@ -172,23 +170,11 @@ public class Player {
             System.out.println("NEMOZES SKONCIT TAH LEBO MAS VIAC KARIET AKO ZIVOTOV! (mas " + this.getLife() + " zivot/y/ov)");
             return false;
         }
-        System.out.println("HRAC " + this.getName() + " UKONCIL SVOJ TAH, ZOSTALI MU " + this.getLife() + " ZIVOT/Y/OV!");
         return true;
     }
 
-    public void throwCardToDeck(int choiceCard, ArrayList<Card> playingCards, ArrayList<Card> playerCards) {
+    public void throwCard(int choiceCard, ArrayList<Card> playingCards, ArrayList<Card> playerCards) {
         playingCards.add(playerCards.remove(choiceCard));
     }
 
-    public boolean escapedPrison(ArrayList<Card> playingCards) {
-        this.discardCard(Prison.class, this.getBlueCards());
-        playingCards.add(new Prison());
-        if(escapePrisonProbability.nextInt(4) == 0) {
-            System.out.println("HRACOVI " + this.getName() + " SA PODARILO UJST Z VAZENIA A ZACINA SVOJ TAH!");
-        } else {
-            System.out.println("HRACOVI " + this.getName() + " SA NEPODARILO UJST Z VAZENIA!");
-            return false;
-        }
-        return true;
-    }
 }
