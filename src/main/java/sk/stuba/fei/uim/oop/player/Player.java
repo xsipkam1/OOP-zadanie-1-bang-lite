@@ -50,19 +50,19 @@ public class Player {
         this.playerCards.add(card);
     }
 
-    public int hasCard(Class<? extends Card> cardClass, ArrayList<Card> cards) {
+    public int hasCard(Class cardClass, ArrayList<Card> cards) {
         for (int i = 0; i < cards.size(); i++) {
             Card card = cards.get(i);
-            if (cardClass.isAssignableFrom(card.getClass())) {
+            if (cardClass.isInstance(card)) {
                 return i;
             }
         }
         return -1;
     }
 
-    public Card getCard(Class<? extends Card> cardClass, ArrayList<Card> cards) {
+    public Card getCard(Class cardClass, ArrayList<Card> cards) {
         for (Card card : cards) {
-            if (cardClass.isAssignableFrom(card.getClass())) {
+            if (cardClass.isInstance(card)) {
                 return card;
             }
         }
