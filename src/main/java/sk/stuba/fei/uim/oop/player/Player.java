@@ -97,7 +97,7 @@ public class Player {
 
     public void checkLife(ArrayList<Player> players, ArrayList<Card> playingCards) {
         if(this.getLife()<=0) {
-            System.out.println("HRAC " + this.getName() + " JE MRTVY!");
+            System.out.println("\n!!! HRAC " + this.getName() + " JE MRTVY !!!\n");
             this.removeCards(playingCards, this.getPlayerCards());
             this.removeCards(playingCards, this.getBlueCards());
             players.remove(this);
@@ -147,13 +147,16 @@ public class Player {
     public int chooseAction(){
         System.out.println();
         System.out.println("1 zahrat kartu");
-        System.out.println("2 zahodit kartu");
-        System.out.println("3 ukoncit tah");
+        System.out.print("2 ukoncit tah");
+        if(this.getPlayerCards().size()>this.getLife()) {
+            System.out.print(" (zahrna vyhadzovanie prebytocnych kariet)");
+        }
+        System.out.println();
 
         int choice;
         do {
-            choice=ZKlavesnice.readInt("Vyber si svoj tah (cislo 1 az 3) ");
-        } while(choice != 1 && choice != 2 && choice != 3);
+            choice=ZKlavesnice.readInt("Vyber si svoj tah (cislo 1 az 2) ");
+        } while(choice != 1 && choice != 2);
         return choice;
     }
 
@@ -165,12 +168,16 @@ public class Player {
         }
     }
 
-    public boolean endTurn(){
-        if(this.getPlayerCards().size()>this.getLife()){
-            System.out.println("NEMOZES SKONCIT TAH LEBO MAS VIAC KARIET AKO ZIVOTOV! (mas " + this.getLife() + " zivot/y/ov)");
-            return false;
+    public void endTurn(ArrayList<Card> playingCards){
+        if(this.getPlayerCards().size()<=this.getLife()) {
+            return;
         }
-        return true;
+        while(this.getPlayerCards().size()>this.getLife()) {
+            System.out.println("------------------------------------------");
+            System.out.println("Z RUKY MUSIS VYHODIT ESTE " + (this.getPlayerCards().size()-this.getLife()) + " KARTY/U");
+            this.printCards();
+            this.throwCard(this.chooseCard(), playingCards, this.getPlayerCards());
+        }
     }
 
     public void throwCard(int choiceCard, ArrayList<Card> playingCards, ArrayList<Card> playerCards) {

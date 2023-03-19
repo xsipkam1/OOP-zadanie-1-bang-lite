@@ -1,21 +1,15 @@
-package sk.stuba.fei.uim.oop.cards;
+package sk.stuba.fei.uim.oop.cards.blue;
 
+import sk.stuba.fei.uim.oop.cards.Card;
 import sk.stuba.fei.uim.oop.player.Player;
 
 import java.util.ArrayList;
-import java.util.Random;
 
-public class Barrel extends Card {
+public class Barrel extends BlueCard {
     private static final String CARD_NAME = "BARREL";
-    private final Random barrelProbability;
 
     public Barrel() {
-        barrelProbability=new Random();
-    }
-
-    @Override
-    public String getCardName() {
-        return CARD_NAME;
+        super(CARD_NAME);
     }
 
     @Override
@@ -29,8 +23,9 @@ public class Barrel extends Card {
         return false;
     }
 
-    public boolean checkBarrel(Player player) {
-        if(barrelProbability.nextInt(4) == 0) {
+    @Override
+    public boolean checkEffect(Player player, ArrayList<Card> playingCards, ArrayList<Player> players) {
+        if(blueCardProbability.nextInt(4) == 0) {
             System.out.println("HRAC " + player.getName() + " SA UHOL POMOCOU KARTY BARREL!");
             return true;
         }

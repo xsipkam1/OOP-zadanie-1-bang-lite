@@ -1,6 +1,8 @@
 package sk.stuba.fei.uim.oop.game;
 
 import sk.stuba.fei.uim.oop.cards.*;
+import sk.stuba.fei.uim.oop.cards.brown.*;
+import sk.stuba.fei.uim.oop.cards.blue.*;
 import sk.stuba.fei.uim.oop.player.Player;
 import sk.stuba.fei.uim.oop.utility.ZKlavesnice;
 
@@ -86,18 +88,15 @@ public class Game {
     }
 
     private void playerTurn(Player player) {
-        System.out.println("------------------------------------------");
-
         Card dynamite = player.getCard(Dynamite.class, player.getBlueCards());
         if(dynamite != null) {
-            ((Dynamite) dynamite).checkDynamite(player, playingCards, players);
-            if(player.getLife()<=0) {
+            if(((Dynamite) dynamite).checkEffect(player, playingCards, players) && player.getLife()<=0) {
                 return;
             }
         }
         Card prison = player.getCard(Prison.class, player.getBlueCards());
         if(prison != null) {
-            if(!((Prison) prison).escapedPrison(player, playingCards)) {
+            if(!((Prison) prison).checkEffect(player, playingCards, players)) {
                 return;
             }
         }
@@ -112,16 +111,14 @@ public class Game {
             if (choice == 1) {
                 player.playCard(players, playingCards);
             } else if (choice == 2) {
-                player.throwCard(player.chooseCard(), playingCards, player.getPlayerCards());
-            } else if (choice == 3) {
-                if(player.endTurn()){
-                    break;
-                }
+                player.endTurn(playingCards);
+                break;
             }
         }
 
         if(players.size() > 1 ) {
             System.out.println("HRAC " + player.getName() + " UKONCIL SVOJ TAH, ZOSTALI MU " + player.getLife() + " ZIVOT/Y/OV!");
+            System.out.println("\n------------------------------------------\n");
         }
 
     }

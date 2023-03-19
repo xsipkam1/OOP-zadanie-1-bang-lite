@@ -1,5 +1,7 @@
-package sk.stuba.fei.uim.oop.cards;
+package sk.stuba.fei.uim.oop.cards.brown;
 
+import sk.stuba.fei.uim.oop.cards.Card;
+import sk.stuba.fei.uim.oop.cards.blue.Barrel;
 import sk.stuba.fei.uim.oop.player.Player;
 
 import java.util.ArrayList;
@@ -7,9 +9,8 @@ import java.util.ArrayList;
 public class Bang extends Card {
     private static final String CARD_NAME = "BANG";
 
-    @Override
-    public String getCardName() {
-        return CARD_NAME;
+    public Bang() {
+        super(CARD_NAME);
     }
 
     @Override
@@ -18,7 +19,7 @@ public class Bang extends Card {
 
         Card barrel = chosenOpponent.getCard(Barrel.class, chosenOpponent.getBlueCards());
         if(barrel != null) {
-            if(((Barrel) barrel).checkBarrel(chosenOpponent)) {
+            if(((Barrel) barrel).checkEffect(chosenOpponent, playingCards, players)) {
                 return true;
             }
         }

@@ -1,21 +1,15 @@
-package sk.stuba.fei.uim.oop.cards;
+package sk.stuba.fei.uim.oop.cards.blue;
 
+import sk.stuba.fei.uim.oop.cards.Card;
 import sk.stuba.fei.uim.oop.player.Player;
 
 import java.util.ArrayList;
-import java.util.Random;
 
-public class Dynamite extends Card {
+public class Dynamite extends BlueCard {
     private static final String CARD_NAME = "DYNAMIT";
-    private final Random dynamiteProbability;
 
     public Dynamite() {
-        dynamiteProbability = new Random();
-    }
-
-    @Override
-    public String getCardName() {
-        return CARD_NAME;
+        super(CARD_NAME);
     }
 
     @Override
@@ -25,8 +19,9 @@ public class Dynamite extends Card {
         return false;
     }
 
-    public void checkDynamite(Player player, ArrayList<Card> playingCards, ArrayList<Player> players) {
-        if(dynamiteProbability.nextInt(8) == 0) {
+    @Override
+    public boolean checkEffect(Player player, ArrayList<Card> playingCards, ArrayList<Player> players) {
+        if(blueCardProbability.nextInt(8) == 0) {
             System.out.println("HRACOVI " + player.getName() + " VYBUCHOL DYNAMIT!");
             for(int i=0; i<3; i++){
                 player.decrementLife();
@@ -35,11 +30,12 @@ public class Dynamite extends Card {
                 player.throwCard(player.hasCard(Dynamite.class, player.getBlueCards()), playingCards, player.getBlueCards());
             }
             player.checkLife(players, playingCards);
-        } else {
-            int dynamiteIndex = players.indexOf(player);
-            Player previousPlayer = players.get((dynamiteIndex - 1 + players.size()) % players.size());
-            player.throwCard(player.hasCard(Dynamite.class, player.getBlueCards()), previousPlayer.getBlueCards(), player.getBlueCards());
-            System.out.println("HRACOVI " + player.getName() + " DYNAMIT NEVYBUCHOL A POSIELA HO HRACOVI " + previousPlayer.getName());
+            return true;
         }
+        int dynamiteIndex = players.indexOf(player);
+        Player previousPlayer = players.get((dynamiteIndex - 1 + players.size()) % players.size());
+        player.throwCard(player.hasCard(Dynamite.class, player.getBlueCards()), previousPlayer.getBlueCards(), player.getBlueCards());
+        System.out.println("HRACOVI " + player.getName() + " DYNAMIT NEVYBUCHOL A POSIELA HO HRACOVI " + previousPlayer.getName());
+        return false;
     }
 }

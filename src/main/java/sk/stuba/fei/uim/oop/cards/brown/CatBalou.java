@@ -1,5 +1,6 @@
-package sk.stuba.fei.uim.oop.cards;
+package sk.stuba.fei.uim.oop.cards.brown;
 
+import sk.stuba.fei.uim.oop.cards.Card;
 import sk.stuba.fei.uim.oop.player.Player;
 import sk.stuba.fei.uim.oop.utility.ZKlavesnice;
 
@@ -11,12 +12,8 @@ public class CatBalou extends Card {
     private final Random chooseRandomCard;
 
     public CatBalou() {
+        super(CARD_NAME);
         chooseRandomCard=new Random();
-    }
-
-    @Override
-    public String getCardName(){
-        return CARD_NAME;
     }
 
     @Override

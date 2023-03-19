@@ -1,5 +1,6 @@
-package sk.stuba.fei.uim.oop.cards;
+package sk.stuba.fei.uim.oop.cards.brown;
 
+import sk.stuba.fei.uim.oop.cards.Card;
 import sk.stuba.fei.uim.oop.player.Player;
 
 import java.util.ArrayList;
@@ -7,9 +8,8 @@ import java.util.ArrayList;
 public class Beer extends Card {
     private static final String CARD_NAME = "PIVO";
 
-    @Override
-    public String getCardName(){
-        return CARD_NAME;
+    public Beer() {
+        super(CARD_NAME);
     }
 
     @Override

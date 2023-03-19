@@ -1,5 +1,6 @@
-package sk.stuba.fei.uim.oop.cards;
+package sk.stuba.fei.uim.oop.cards.brown;
 
+import sk.stuba.fei.uim.oop.cards.Card;
 import sk.stuba.fei.uim.oop.player.Player;
 
 import java.util.ArrayList;
@@ -8,9 +9,8 @@ import java.util.ArrayList;
 public class Stagecoach extends Card {
     private static final String CARD_NAME = "DOSTAVNIK";
 
-    @Override
-    public String getCardName() {
-        return CARD_NAME;
+    public Stagecoach() {
+        super(CARD_NAME);
     }
 
     @Override
