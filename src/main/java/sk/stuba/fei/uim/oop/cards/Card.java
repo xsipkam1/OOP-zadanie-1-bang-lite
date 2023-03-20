@@ -5,16 +5,16 @@ import sk.stuba.fei.uim.oop.player.Player;
 import java.util.ArrayList;
 
 public abstract class Card {
-    protected String name;
+    private final String cardName;
 
     public Card(String name) {
-        this.name = name;
+        cardName = name;
     }
 
     public abstract boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players);
 
     public String getCardName() {
-        return name;
+        return cardName;
     }
 
 }
