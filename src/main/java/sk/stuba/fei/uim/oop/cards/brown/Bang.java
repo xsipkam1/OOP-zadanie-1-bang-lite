@@ -18,14 +18,14 @@ public class Bang extends Card {
         Player chosenOpponent = player.chooseOpponent(CARD_NAME, players);
 
         Card barrel = chosenOpponent.getCard(Barrel.class, chosenOpponent.getBlueCards());
-        if(barrel != null) {
-            if(((Barrel) barrel).checkEffect(chosenOpponent, playingCards, players)) {
+        if (barrel != null) {
+            if (((Barrel) barrel).checkEffect(chosenOpponent, playingCards, players)) {
                 return true;
             }
         }
 
         int opponentMissed = chosenOpponent.hasCard(Missed.class, chosenOpponent.getPlayerCards());
-        if(opponentMissed > -1) {
+        if (opponentMissed > -1) {
             System.out.println("HRAC " + chosenOpponent.getName() + " SA UHOL POMOCOU KARTY VEDLA!");
             chosenOpponent.throwCard(opponentMissed, playingCards, chosenOpponent.getPlayerCards());
         } else {

@@ -11,7 +11,8 @@ public abstract class BlueCard extends Card {
 
     public BlueCard(String name) {
         super(name);
-        blueCardProbability=new Random();
+        blueCardProbability = new Random();
     }
+
     public abstract boolean checkEffect(Player player, ArrayList<Card> playingCards, ArrayList<Player> players);
 }

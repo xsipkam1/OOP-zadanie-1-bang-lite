@@ -14,7 +14,7 @@ public class Game {
     private final ArrayList<Player> players;
     private int currentPlayer;
 
-    public Game(){
+    public Game() {
         playingCards = new ArrayList<>();
         players = new ArrayList<>();
 
@@ -27,11 +27,11 @@ public class Game {
     private void initializePlayers() {
         int numOfPlayers;
         do {
-            numOfPlayers=ZKlavesnice.readInt("Zadaj pocet hracov (min 2 max 4): ");
-        } while(numOfPlayers < 2 || numOfPlayers > 4);
+            numOfPlayers = ZKlavesnice.readInt("Zadaj pocet hracov (min 2 max 4): ");
+        } while (numOfPlayers < 2 || numOfPlayers > 4);
 
-        for(int i=0; i<numOfPlayers; i++) {
-            String name = ZKlavesnice.readString("Zadaj meno hraca c." + (i+1) + ": ");
+        for (int i = 0; i < numOfPlayers; i++) {
+            String name = ZKlavesnice.readString("Zadaj meno hraca c." + (i + 1) + ": ");
             players.add(new Player(name));
         }
     }
@@ -67,11 +67,11 @@ public class Game {
 
     private void startGame() {
         System.out.println("----------------HRA ZACALA----------------");
-        while(players.size() != 1){
+        while (players.size() != 1) {
             Player activePlayer = players.get(currentPlayer);
             int numOfPlayersBeforePlayerTurn = players.size();
             playerTurn(activePlayer);
-            if(numOfPlayersBeforePlayerTurn > players.size()) {
+            if (numOfPlayersBeforePlayerTurn > players.size()) {
                 currentPlayer = players.indexOf(activePlayer);
             }
             chooseCurrentPlayer();
@@ -82,31 +82,53 @@ public class Game {
 
     private void chooseCurrentPlayer() {
         currentPlayer++;
-        if(currentPlayer > players.size()-1) {
-            currentPlayer=0;
+        if (currentPlayer > players.size() - 1) {
+            currentPlayer = 0;
+        }
+    }
+
+    private void printStats(Player player) {
+        ArrayList<Player> opponents = player.getOpponents(players);
+        System.out.println();
+        for (Player opponent : opponents) {
+            System.out.print("HRAC [" + opponent.getName() + "] MA [" + opponent.getLife() + "] ZIVOT/Y/OV A [" + opponent.getPlayerCards().size() + "] KARTY/IET V RUKE");
+            if (!opponent.getBlueCards().isEmpty()) {
+                if (opponent.getCard(Barrel.class, opponent.getBlueCards()) != null) {
+                    System.out.print(" + [BARREL]");
+                }
+                if (opponent.getCard(Prison.class, opponent.getBlueCards()) != null) {
+                    System.out.print(" + [VAZENIE]");
+                }
+                if (opponent.getCard(Dynamite.class, opponent.getBlueCards()) != null) {
+                    System.out.print(" + [DYNAMIT]");
+                }
+                System.out.print(" PRED SEBOU");
+            }
+            System.out.println();
         }
     }
 
     private void playerTurn(Player player) {
         Card dynamite = player.getCard(Dynamite.class, player.getBlueCards());
-        if(dynamite != null) {
-            if(((Dynamite) dynamite).checkEffect(player, playingCards, players) && player.getLife()<=0) {
+        if (dynamite != null) {
+            if (((Dynamite) dynamite).checkEffect(player, playingCards, players) && player.getLife() <= 0) {
                 return;
             }
         }
         Card prison = player.getCard(Prison.class, player.getBlueCards());
-        if(prison != null) {
-            if(!((Prison) prison).checkEffect(player, playingCards, players)) {
+        if (prison != null) {
+            if (!((Prison) prison).checkEffect(player, playingCards, players)) {
                 return;
             }
         }
 
         System.out.println("HRAC " + player.getName() + " ZACAL SVOJ TAH! MA ESTE " + player.getLife() + " ZIVOT/Y/OV");
         player.drawCards(playingCards);
+        printStats(player);
 
-        while (player.getPlayerCards().size()>0 && players.size()>1) {
+        while (player.getPlayerCards().size() > 0 && players.size() > 1) {
             player.printCards();
-            int choice=player.chooseAction();
+            int choice = player.chooseAction();
 
             if (choice == 1) {
                 player.playCard(players, playingCards);
@@ -116,11 +138,10 @@ public class Game {
             }
         }
 
-        if(players.size() > 1 ) {
+        if (players.size() > 1) {
             System.out.println("HRAC " + player.getName() + " UKONCIL SVOJ TAH, ZOSTALI MU " + player.getLife() + " ZIVOT/Y/OV!");
             System.out.println("\n------------------------------------------\n");
         }
-
     }
 
 }

@@ -11,11 +11,11 @@ public abstract class Card {
         cardName = name;
     }
 
-    public abstract boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players);
-
     public String getCardName() {
         return cardName;
     }
+
+    public abstract boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players);
 
 }
 

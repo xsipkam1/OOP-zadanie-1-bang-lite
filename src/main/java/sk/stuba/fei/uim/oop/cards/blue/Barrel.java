@@ -14,7 +14,7 @@ public class Barrel extends BlueCard {
 
     @Override
     public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players) {
-        if(player.hasCard(Barrel.class, player.getBlueCards()) > -1) {
+        if (player.hasCard(Barrel.class, player.getBlueCards()) > -1) {
             System.out.println("UZ PRED SEBOU JEDEN BARREL MAS!");
         } else {
             player.throwCard(player.hasCard(Barrel.class, player.getPlayerCards()), player.getBlueCards(), player.getPlayerCards());
@@ -25,7 +25,7 @@ public class Barrel extends BlueCard {
 
     @Override
     public boolean checkEffect(Player player, ArrayList<Card> playingCards, ArrayList<Player> players) {
-        if(blueCardProbability.nextInt(4) == 0) {
+        if (blueCardProbability.nextInt(4) == 0) {
             System.out.println("HRAC " + player.getName() + " SA UHOL POMOCOU KARTY BARREL!");
             return true;
         }

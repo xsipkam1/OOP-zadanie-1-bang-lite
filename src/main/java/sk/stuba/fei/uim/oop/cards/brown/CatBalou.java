@@ -13,25 +13,24 @@ public class CatBalou extends Card {
 
     public CatBalou() {
         super(CARD_NAME);
-        chooseRandomCard=new Random();
+        chooseRandomCard = new Random();
     }
 
     @Override
-    public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players){
+    public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players) {
         Player chosenOpponent = player.chooseOpponent(CARD_NAME, players);
 
         if (chosenOpponent.getBlueCards().isEmpty() && chosenOpponent.getPlayerCards().isEmpty()) {
             System.out.println("HRAC " + chosenOpponent.getName() + " NEMA ZIADNE KARTY! TUTO KARTU NANHO TERAZ NEMOZES POUZIT!");
             return false;
-        }
-        else if (chosenOpponent.getBlueCards().size()>0 && chosenOpponent.getPlayerCards().size()>0){
+        } else if (chosenOpponent.getBlueCards().size() > 0 && chosenOpponent.getPlayerCards().size() > 0) {
             System.out.println("CHCES HRACOVI " + chosenOpponent.getName() + " ODSTRANIT KRATU Z RUKY ALEBO ZO STOLA?");
             System.out.println("1 z ruky");
             System.out.println("2 zo stola");
             int choice;
             do {
                 choice = ZKlavesnice.readInt("Vyber si (1 alebo 2): ");
-            } while(choice != 1 && choice != 2);
+            } while (choice != 1 && choice != 2);
             pickRandomCardAndThrowItToDeck(chosenOpponent, playingCards, choice == 1 ? chosenOpponent.getPlayerCards() : chosenOpponent.getBlueCards());
             return true;
         }

@@ -5,7 +5,6 @@ import sk.stuba.fei.uim.oop.player.Player;
 
 import java.util.ArrayList;
 
-
 public class Stagecoach extends Card {
     private static final String CARD_NAME = "DOSTAVNIK";
 

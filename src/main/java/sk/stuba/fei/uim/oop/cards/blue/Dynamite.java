@@ -21,12 +21,12 @@ public class Dynamite extends BlueCard {
 
     @Override
     public boolean checkEffect(Player player, ArrayList<Card> playingCards, ArrayList<Player> players) {
-        if(blueCardProbability.nextInt(8) == 0) {
+        if (blueCardProbability.nextInt(8) == 0) {
             System.out.println("HRACOVI " + player.getName() + " VYBUCHOL DYNAMIT!");
-            for(int i=0; i<3; i++){
+            for (int i = 0; i < 3; i++) {
                 player.decrementLife();
             }
-            if(player.getLife()>0) {
+            if (player.getLife() > 0) {
                 player.throwCard(player.hasCard(Dynamite.class, player.getBlueCards()), playingCards, player.getBlueCards());
             }
             player.checkLife(players, playingCards);
