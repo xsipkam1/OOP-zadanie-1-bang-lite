@@ -13,7 +13,17 @@ public class Missed extends Card {
     }
 
     @Override
-    public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players) {
+    public boolean equals(Object obj) {
+        if (obj instanceof Missed) {
+            Missed other = (Missed) obj;
+            return this.getClass().equals(other.getClass());
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players, ArrayList<Card> discardedCards) {
         System.out.println("KARTU VEDLA NEMOZES ZAHRAT!");
         return false;
     }

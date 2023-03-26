@@ -17,7 +17,7 @@ public class CatBalou extends Card {
     }
 
     @Override
-    public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players) {
+    public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players, ArrayList<Card> discardedCards) {
         Player chosenOpponent = player.chooseOpponent(CARD_NAME, players);
 
         if (chosenOpponent.getBlueCards().isEmpty() && chosenOpponent.getPlayerCards().isEmpty()) {
@@ -31,18 +31,18 @@ public class CatBalou extends Card {
             do {
                 choice = ZKlavesnice.readInt("Vyber si (1 alebo 2): ");
             } while (choice != 1 && choice != 2);
-            pickRandomCardAndThrowItToDeck(chosenOpponent, playingCards, choice == 1 ? chosenOpponent.getPlayerCards() : chosenOpponent.getBlueCards());
+            pickRandomCardAndThrowItToDeck(chosenOpponent, discardedCards, choice == 1 ? chosenOpponent.getPlayerCards() : chosenOpponent.getBlueCards());
             return true;
         }
         ArrayList<Card> targetCards = chosenOpponent.getBlueCards().isEmpty() ? chosenOpponent.getPlayerCards() : chosenOpponent.getBlueCards();
-        pickRandomCardAndThrowItToDeck(chosenOpponent, playingCards, targetCards);
+        pickRandomCardAndThrowItToDeck(chosenOpponent, discardedCards, targetCards);
         return true;
     }
 
-    private void pickRandomCardAndThrowItToDeck(Player chosenOpponent, ArrayList<Card> playingCards, ArrayList<Card> playerCards) {
+    private void pickRandomCardAndThrowItToDeck(Player chosenOpponent, ArrayList<Card> discardedCards, ArrayList<Card> playerCards) {
         int chosenOpponentNumOfCards = playerCards.size();
         int randomCard = chooseRandomCard.nextInt(chosenOpponentNumOfCards);
         System.out.println("HRAC " + chosenOpponent.getName() + " PRISIEL O KARTU " + playerCards.get(randomCard).getCardName());
-        chosenOpponent.throwCard(randomCard, playingCards, playerCards);
+        chosenOpponent.throwCard(randomCard, discardedCards, playerCards);
     }
 }

@@ -14,5 +14,16 @@ public abstract class BlueCard extends Card {
         blueCardProbability = new Random();
     }
 
-    public abstract boolean checkEffect(Player player, ArrayList<Card> playingCards, ArrayList<Player> players);
+    public abstract boolean checkEffect(Player player, ArrayList<Card> discardedCards, ArrayList<Player> players);
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof BlueCard) {
+            BlueCard other = (BlueCard) obj;
+            return this.getClass().equals(other.getClass()) && this.getCardName().equals((other.getCardName()));
+        } else {
+            return false;
+        }
+    }
+
 }

@@ -1,9 +1,11 @@
 package sk.stuba.fei.uim.oop.player;
 
 import sk.stuba.fei.uim.oop.cards.*;
+import sk.stuba.fei.uim.oop.cards.blue.*;
 import sk.stuba.fei.uim.oop.utility.ZKlavesnice;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Player {
     private int life;
@@ -50,19 +52,27 @@ public class Player {
         this.playerCards.add(card);
     }
 
-    public int hasCard(Class cardClass, ArrayList<Card> cards) {
-        for (int i = 0; i < cards.size(); i++) {
-            Card card = cards.get(i);
-            if (cardClass.isInstance(card)) {
-                return i;
+    public Card getPrison(ArrayList<Card> cards) {
+        for (Card card : cards) {
+            if (card instanceof Prison) {
+                return card;
             }
         }
-        return -1;
+        return null;
     }
 
-    public Card getCard(Class cardClass, ArrayList<Card> cards) {
+    public Card getBarrel(ArrayList<Card> cards) {
         for (Card card : cards) {
-            if (cardClass.isInstance(card)) {
+            if (card instanceof Barrel) {
+                return card;
+            }
+        }
+        return null;
+    }
+
+    public Card getDynamite(ArrayList<Card> cards) {
+        for (Card card : cards) {
+            if (card instanceof Dynamite) {
                 return card;
             }
         }
@@ -82,24 +92,29 @@ public class Player {
         }
     }
 
-    public void removeCards(ArrayList<Card> playingCards, ArrayList<Card> playerCards) {
+    public void removeCards(ArrayList<Card> discardedCards, ArrayList<Card> playerCards) {
         for (int i = 0; i < playerCards.size(); i++) {
-            throwCard(i, playingCards, playerCards);
+            throwCard(i, discardedCards, playerCards);
         }
     }
 
-    public void drawCards(ArrayList<Card> playingCards) {
+    public void drawCards(ArrayList<Card> playingCards, ArrayList<Card> discardedCards) {
         System.out.println("HRAC " + this.getName() + " SI TAHA 2 KARTY!");
         for (int i = 0; i < 2; i++) {
+            if (playingCards.isEmpty()) {
+                playingCards.addAll(discardedCards);
+                discardedCards.clear();
+                Collections.shuffle(playingCards);
+            }
             this.addCard(playingCards.remove(0));
         }
     }
 
-    public void checkLife(ArrayList<Player> players, ArrayList<Card> playingCards) {
+    public void checkLife(ArrayList<Player> players, ArrayList<Card> discardedCards) {
         if (this.getLife() <= 0) {
             System.out.println("\n!!! HRAC " + this.getName() + " JE MRTVY !!!\n");
-            this.removeCards(playingCards, this.getPlayerCards());
-            this.removeCards(playingCards, this.getBlueCards());
+            this.removeCards(discardedCards, this.getPlayerCards());
+            this.removeCards(discardedCards, this.getBlueCards());
             players.remove(this);
         } else {
             System.out.println("HRAC " + this.getName() + " MA ESTE " + this.getLife() + " ZIVOT/Y!");
@@ -159,15 +174,15 @@ public class Player {
         return choice;
     }
 
-    public void playCard(ArrayList<Player> players, ArrayList<Card> playingCards) {
+    public void playCard(ArrayList<Player> players, ArrayList<Card> playingCards, ArrayList<Card> discardedCards) {
         int choiceCard = this.chooseCard();
         Card card = this.getPlayerCards().get(choiceCard);
-        if (card.action(this, playingCards, players)) {
-            this.throwCard(choiceCard, playingCards, this.getPlayerCards());
+        if (card.action(this, playingCards, players, discardedCards)) {
+            this.throwCard(choiceCard, discardedCards, this.getPlayerCards());
         }
     }
 
-    public void endTurn(ArrayList<Card> playingCards) {
+    public void endTurn(ArrayList<Card> discardedCards) {
         if (this.getPlayerCards().size() <= this.getLife()) {
             return;
         }
@@ -175,12 +190,12 @@ public class Player {
             System.out.println("------------------------------------------");
             System.out.println("Z RUKY MUSIS VYHODIT ESTE " + (this.getPlayerCards().size() - this.getLife()) + " KARTY/U");
             this.printCards();
-            this.throwCard(this.chooseCard(), playingCards, this.getPlayerCards());
+            this.throwCard(this.chooseCard(), discardedCards, this.getPlayerCards());
         }
     }
 
-    public void throwCard(int choiceCard, ArrayList<Card> playingCards, ArrayList<Card> playerCards) {
-        playingCards.add(playerCards.remove(choiceCard));
+    public void throwCard(int choiceCard, ArrayList<Card> discardedCards, ArrayList<Card> playerCards) {
+        discardedCards.add(playerCards.remove(choiceCard));
     }
 
 }

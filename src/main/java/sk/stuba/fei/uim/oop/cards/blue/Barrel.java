@@ -13,18 +13,18 @@ public class Barrel extends BlueCard {
     }
 
     @Override
-    public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players) {
-        if (player.hasCard(Barrel.class, player.getBlueCards()) > -1) {
+    public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players, ArrayList<Card> discardedCards) {
+        if (player.getBlueCards().contains(new Barrel())) {
             System.out.println("UZ PRED SEBOU JEDEN BARREL MAS!");
         } else {
-            player.throwCard(player.hasCard(Barrel.class, player.getPlayerCards()), player.getBlueCards(), player.getPlayerCards());
+            player.throwCard(player.getPlayerCards().indexOf(new Barrel()), player.getBlueCards(), player.getPlayerCards());
             System.out.println("VYLOZIL SI PRED SEBA BARREL!");
         }
         return false;
     }
 
     @Override
-    public boolean checkEffect(Player player, ArrayList<Card> playingCards, ArrayList<Player> players) {
+    public boolean checkEffect(Player player, ArrayList<Card> discardedCards, ArrayList<Player> players) {
         if (blueCardProbability.nextInt(4) == 0) {
             System.out.println("HRAC " + player.getName() + " SA UHOL POMOCOU KARTY BARREL!");
             return true;

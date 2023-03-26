@@ -14,20 +14,30 @@ public class Bang extends Card {
     }
 
     @Override
-    public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players) {
+    public boolean equals(Object obj) {
+        if (obj instanceof Bang) {
+            Bang other = (Bang) obj;
+            return this.getClass().equals(other.getClass());
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players, ArrayList<Card> discardedCards) {
         Player chosenOpponent = player.chooseOpponent(CARD_NAME, players);
 
-        Card barrel = chosenOpponent.getCard(Barrel.class, chosenOpponent.getBlueCards());
+        Card barrel = chosenOpponent.getBarrel(chosenOpponent.getBlueCards());
         if (barrel != null) {
-            if (((Barrel) barrel).checkEffect(chosenOpponent, playingCards, players)) {
+            if (((Barrel) barrel).checkEffect(chosenOpponent, discardedCards, players)) {
                 return true;
             }
         }
 
-        int opponentMissed = chosenOpponent.hasCard(Missed.class, chosenOpponent.getPlayerCards());
+        int opponentMissed = chosenOpponent.getPlayerCards().indexOf(new Missed());
         if (opponentMissed > -1) {
             System.out.println("HRAC " + chosenOpponent.getName() + " SA UHOL POMOCOU KARTY VEDLA!");
-            chosenOpponent.throwCard(opponentMissed, playingCards, chosenOpponent.getPlayerCards());
+            chosenOpponent.throwCard(opponentMissed, discardedCards, chosenOpponent.getPlayerCards());
         } else {
             chosenOpponent.decrementLife();
             System.out.println("ZASAH!");

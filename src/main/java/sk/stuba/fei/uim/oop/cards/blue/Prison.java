@@ -13,20 +13,20 @@ public class Prison extends BlueCard {
     }
 
     @Override
-    public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players) {
+    public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players, ArrayList<Card> discardedCards) {
         Player chosenOpponent = player.chooseOpponent(CARD_NAME, players);
-        if (chosenOpponent.hasCard(Prison.class, chosenOpponent.getBlueCards()) > -1) {
+        if (chosenOpponent.getBlueCards().contains(new Prison())) {
             System.out.println("HRAC " + chosenOpponent.getName() + " UZ JE VO VAZENI! TUTO KARTU NANHO NEMOZES POUZIT!");
         } else {
-            player.throwCard(player.hasCard(Prison.class, player.getPlayerCards()), chosenOpponent.getBlueCards(), player.getPlayerCards());
+            player.throwCard(player.getPlayerCards().indexOf(new Prison()), chosenOpponent.getBlueCards(), player.getPlayerCards());
             System.out.println("UVAZNIL SI HRACA " + chosenOpponent.getName() + "!");
         }
         return false;
     }
 
     @Override
-    public boolean checkEffect(Player player, ArrayList<Card> playingCards, ArrayList<Player> players) {
-        player.throwCard(player.hasCard(Prison.class, player.getBlueCards()), playingCards, player.getBlueCards());
+    public boolean checkEffect(Player player, ArrayList<Card> discardedCards, ArrayList<Player> players) {
+        player.throwCard(player.getBlueCards().indexOf(new Prison()), discardedCards, player.getBlueCards());
         if (blueCardProbability.nextInt(4) == 0) {
             System.out.println("HRACOVI " + player.getName() + " SA PODARILO UJST Z VAZENIA A ZACINA SVOJ TAH!");
             return true;

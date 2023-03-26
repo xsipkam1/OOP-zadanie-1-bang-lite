@@ -13,9 +13,9 @@ public class Stagecoach extends Card {
     }
 
     @Override
-    public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players) {
+    public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players, ArrayList<Card> discardedCards) {
         System.out.println("HRAC " + player.getName() + " POUZIL KARTU DOSTAVNIK!");
-        player.drawCards(playingCards);
+        player.drawCards(playingCards, discardedCards);
         return true;
     }
 }

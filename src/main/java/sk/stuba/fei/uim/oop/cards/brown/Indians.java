@@ -13,18 +13,18 @@ public class Indians extends Card {
     }
 
     @Override
-    public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players) {
+    public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players, ArrayList<Card> discardedCards) {
         ArrayList<Player> opponents = player.getOpponents(players);
         System.out.println();
         for (Player opponent : opponents) {
-            int opponentBang = opponent.hasCard(Bang.class, opponent.getPlayerCards());
+            int opponentBang = opponent.getPlayerCards().indexOf(new Bang());
             if (opponentBang > -1) {
-                opponent.throwCard(opponentBang, playingCards, opponent.getPlayerCards());
+                opponent.throwCard(opponentBang, discardedCards, opponent.getPlayerCards());
                 System.out.println("HRAC " + opponent.getName() + " POUZIL KARTU BANG!");
             } else {
                 opponent.decrementLife();
                 System.out.println("HRAC " + opponent.getName() + " STRATIL ZIVOT!");
-                opponent.checkLife(players, playingCards);
+                opponent.checkLife(players, discardedCards);
             }
         }
         System.out.println();

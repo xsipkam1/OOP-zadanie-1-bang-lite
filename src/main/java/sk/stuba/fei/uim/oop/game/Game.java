@@ -11,11 +11,13 @@ import java.util.Collections;
 
 public class Game {
     private final ArrayList<Card> playingCards;
+    private final ArrayList<Card> discardedCards;
     private final ArrayList<Player> players;
     private int currentPlayer;
 
     public Game() {
         playingCards = new ArrayList<>();
+        discardedCards = new ArrayList<>();
         players = new ArrayList<>();
 
         initializePlayers();
@@ -93,13 +95,13 @@ public class Game {
         for (Player opponent : opponents) {
             System.out.print("HRAC [" + opponent.getName() + "] MA [" + opponent.getLife() + "] ZIVOT/Y/OV A [" + opponent.getPlayerCards().size() + "] KARTY/IET V RUKE");
             if (!opponent.getBlueCards().isEmpty()) {
-                if (opponent.getCard(Barrel.class, opponent.getBlueCards()) != null) {
+                if (opponent.getBarrel(opponent.getBlueCards()) != null) {
                     System.out.print(" + [BARREL]");
                 }
-                if (opponent.getCard(Prison.class, opponent.getBlueCards()) != null) {
+                if (opponent.getPrison(opponent.getBlueCards()) != null) {
                     System.out.print(" + [VAZENIE]");
                 }
-                if (opponent.getCard(Dynamite.class, opponent.getBlueCards()) != null) {
+                if (opponent.getDynamite(opponent.getBlueCards()) != null) {
                     System.out.print(" + [DYNAMIT]");
                 }
                 System.out.print(" PRED SEBOU");
@@ -109,21 +111,21 @@ public class Game {
     }
 
     private void playerTurn(Player player) {
-        Card dynamite = player.getCard(Dynamite.class, player.getBlueCards());
+        Card dynamite = player.getDynamite(player.getBlueCards());
         if (dynamite != null) {
-            if (((Dynamite) dynamite).checkEffect(player, playingCards, players) && player.getLife() <= 0) {
+            if (((Dynamite) dynamite).checkEffect(player, discardedCards, players) && player.getLife() <= 0) {
                 return;
             }
         }
-        Card prison = player.getCard(Prison.class, player.getBlueCards());
+        Card prison = player.getPrison( player.getBlueCards());
         if (prison != null) {
-            if (!((Prison) prison).checkEffect(player, playingCards, players)) {
+            if (!((Prison) prison).checkEffect(player, discardedCards, players)) {
                 return;
             }
         }
 
         System.out.println("HRAC " + player.getName() + " ZACAL SVOJ TAH! MA ESTE " + player.getLife() + " ZIVOT/Y/OV");
-        player.drawCards(playingCards);
+        player.drawCards(playingCards, discardedCards);
         printStats(player);
 
         while (player.getPlayerCards().size() > 0 && players.size() > 1) {
@@ -131,9 +133,9 @@ public class Game {
             int choice = player.chooseAction();
 
             if (choice == 1) {
-                player.playCard(players, playingCards);
+                player.playCard(players, playingCards, discardedCards);
             } else if (choice == 2) {
-                player.endTurn(playingCards);
+                player.endTurn(discardedCards);
                 break;
             }
         }
