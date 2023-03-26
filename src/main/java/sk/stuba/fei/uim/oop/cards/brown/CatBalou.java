@@ -17,7 +17,7 @@ public class CatBalou extends Card {
     }
 
     @Override
-    public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players, ArrayList<Card> discardedCards) {
+    public boolean action(Player player, ArrayList<Player> players, ArrayList<Card> discardedCards) {
         Player chosenOpponent = player.chooseOpponent(CARD_NAME, players);
 
         if (chosenOpponent.getBlueCards().isEmpty() && chosenOpponent.getPlayerCards().isEmpty()) {

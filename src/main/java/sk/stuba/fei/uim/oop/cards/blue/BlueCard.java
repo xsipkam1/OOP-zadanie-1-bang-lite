@@ -25,5 +25,4 @@ public abstract class BlueCard extends Card {
             return false;
         }
     }
-
 }

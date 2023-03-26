@@ -13,7 +13,7 @@ public class Prison extends BlueCard {
     }
 
     @Override
-    public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players, ArrayList<Card> discardedCards) {
+    public boolean action(Player player, ArrayList<Player> players, ArrayList<Card> discardedCards) {
         Player chosenOpponent = player.chooseOpponent(CARD_NAME, players);
         if (chosenOpponent.getBlueCards().contains(new Prison())) {
             System.out.println("HRAC " + chosenOpponent.getName() + " UZ JE VO VAZENI! TUTO KARTU NANHO NEMOZES POUZIT!");

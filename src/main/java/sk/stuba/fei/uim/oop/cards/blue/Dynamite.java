@@ -13,7 +13,7 @@ public class Dynamite extends BlueCard {
     }
 
     @Override
-    public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players, ArrayList<Card> discardedCards) {
+    public boolean action(Player player, ArrayList<Player> players, ArrayList<Card> discardedCards) {
         player.throwCard(player.getPlayerCards().indexOf(new Dynamite()), player.getBlueCards(), player.getPlayerCards());
         System.out.println("VYLOZIL SI PRED SEBA DYNAMIT!");
         return false;

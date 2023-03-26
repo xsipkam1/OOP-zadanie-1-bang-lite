@@ -43,7 +43,7 @@ public class Game {
         addCardsToDeck(new Missed(), 15);
         addCardsToDeck(new Beer(), 8);
         addCardsToDeck(new CatBalou(), 6);
-        addCardsToDeck(new Stagecoach(), 4);
+        addCardsToDeck(new Stagecoach(playingCards), 4);
         addCardsToDeck(new Indians(), 2);
         addCardsToDeck(new Barrel(), 2);
         addCardsToDeck(new Prison(), 3);
@@ -74,12 +74,20 @@ public class Game {
             int numOfPlayersBeforePlayerTurn = players.size();
             playerTurn(activePlayer);
             if (numOfPlayersBeforePlayerTurn > players.size()) {
-                currentPlayer = players.indexOf(activePlayer);
+                updateCurrentPlayer(activePlayer);
             }
             chooseCurrentPlayer();
         }
         System.out.println("----------------KONIEC HRY----------------");
         System.out.println("VITAZ JE " + players.get(0).getName());
+    }
+
+    private void updateCurrentPlayer(Player activePlayer) {
+        if (players.contains(activePlayer)) {
+            currentPlayer = players.indexOf(activePlayer);
+        } else {
+            currentPlayer--;
+        }
     }
 
     private void chooseCurrentPlayer() {
@@ -117,7 +125,7 @@ public class Game {
                 return;
             }
         }
-        Card prison = player.getPrison( player.getBlueCards());
+        Card prison = player.getPrison(player.getBlueCards());
         if (prison != null) {
             if (!((Prison) prison).checkEffect(player, discardedCards, players)) {
                 return;
@@ -133,7 +141,7 @@ public class Game {
             int choice = player.chooseAction();
 
             if (choice == 1) {
-                player.playCard(players, playingCards, discardedCards);
+                player.playCard(players, discardedCards);
             } else if (choice == 2) {
                 player.endTurn(discardedCards);
                 break;

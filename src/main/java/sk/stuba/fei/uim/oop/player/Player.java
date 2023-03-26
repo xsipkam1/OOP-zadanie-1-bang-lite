@@ -174,10 +174,10 @@ public class Player {
         return choice;
     }
 
-    public void playCard(ArrayList<Player> players, ArrayList<Card> playingCards, ArrayList<Card> discardedCards) {
+    public void playCard(ArrayList<Player> players, ArrayList<Card> discardedCards) {
         int choiceCard = this.chooseCard();
         Card card = this.getPlayerCards().get(choiceCard);
-        if (card.action(this, playingCards, players, discardedCards)) {
+        if (card.action(this, players, discardedCards)) {
             this.throwCard(choiceCard, discardedCards, this.getPlayerCards());
         }
     }

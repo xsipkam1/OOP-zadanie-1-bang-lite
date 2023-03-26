@@ -13,7 +13,7 @@ public class Barrel extends BlueCard {
     }
 
     @Override
-    public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players, ArrayList<Card> discardedCards) {
+    public boolean action(Player player, ArrayList<Player> players, ArrayList<Card> discardedCards) {
         if (player.getBlueCards().contains(new Barrel())) {
             System.out.println("UZ PRED SEBOU JEDEN BARREL MAS!");
         } else {

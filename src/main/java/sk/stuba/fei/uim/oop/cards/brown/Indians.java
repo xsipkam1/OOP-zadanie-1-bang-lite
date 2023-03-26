@@ -13,7 +13,7 @@ public class Indians extends Card {
     }
 
     @Override
-    public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players, ArrayList<Card> discardedCards) {
+    public boolean action(Player player, ArrayList<Player> players, ArrayList<Card> discardedCards) {
         ArrayList<Player> opponents = player.getOpponents(players);
         System.out.println();
         for (Player opponent : opponents) {

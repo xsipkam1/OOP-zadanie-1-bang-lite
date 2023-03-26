@@ -15,7 +15,5 @@ public abstract class Card {
         return cardName;
     }
 
-    public abstract boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players, ArrayList<Card> discardedCards);
-
+    public abstract boolean action(Player player, ArrayList<Player> players, ArrayList<Card> discardedCards);
 }
-

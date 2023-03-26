@@ -24,7 +24,7 @@ public class Bang extends Card {
     }
 
     @Override
-    public boolean action(Player player, ArrayList<Card> playingCards, ArrayList<Player> players, ArrayList<Card> discardedCards) {
+    public boolean action(Player player, ArrayList<Player> players, ArrayList<Card> discardedCards) {
         Player chosenOpponent = player.chooseOpponent(CARD_NAME, players);
 
         Card barrel = chosenOpponent.getBarrel(chosenOpponent.getBlueCards());
@@ -41,7 +41,7 @@ public class Bang extends Card {
         } else {
             chosenOpponent.decrementLife();
             System.out.println("ZASAH!");
-            chosenOpponent.checkLife(players, playingCards);
+            chosenOpponent.checkLife(players, discardedCards);
         }
         return true;
     }
